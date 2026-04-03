@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Monitor</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body style="background:black;color:lime">
+<h2>Status: <span id="s">OFF</span></h2>
+Ping: <span id="p">0</span>
+
+<canvas id="c"></canvas>
+
+<script>
+let ws = new WebSocket("ws://localhost:8080/ws-monitor");
+let ctx = document.getElementById("c");
+
+let chart = new Chart(ctx,{type:'line',data:{labels:[],datasets:[{data:[]}]}});
+
+ws.onopen=()=>s.innerText="ON";
+ws.onmessage=e=>{
+ let d=JSON.parse(e.data);
+ p.innerText=d.ping;
+ chart.data.labels.push(Date.now());
+ chart.data.datasets[0].data.push(d.ping);
+ chart.update();
+}
+</script>
+</body>
+</html>
